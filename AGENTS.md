@@ -3,7 +3,7 @@
 ## Non-negotiables (read first)
 
 1. **Client-only, always.** Interactive tools run entirely in the browser. No backend, no telemetry, no external API or network calls, no secrets. A tool that needs a server does not belong here.
-2. **Build is the only gate.** There is no test or lint suite, by design. `pnpm build` passing is the bar; run it after any frontend change.
+2. **`pnpm check:links` and `pnpm build` are the gate** (CI runs both). There is no test or lint suite, by design. Run both after any change.
 3. **Never run `vite` directly.** Use the pnpm scripts. `predev`/`prebuild`/`prepreview` run `scripts/sync-public-content.mjs` to sync `modules/`, `labs/`, and related content into `public/`; running `vite` raw skips that and serves stale or missing content.
 
 ## Project
@@ -15,11 +15,11 @@
 - Install dependencies: `pnpm install`
 - Run local dev server: `pnpm dev`
 - Build frontend: `pnpm build`
+- Check internal links (CI gate): `pnpm check:links`
 - Preview a production build: `pnpm preview`
 - Sync content into `public/` manually: `pnpm sync:public`
 - Regenerate notebook bundles after module edits: `pnpm bundle`
 - Audit open PRs across the OSS surface: `pnpm pr:audit`
-- Merge only clean, check-passing PRs: `pnpm pr:mergeable`
 
 CI auto-regenerates the NotebookLM bundles on push to `main` via `.github/workflows/bundle.yml`, but commit your local `pnpm bundle` output anyway so the diff under review is complete.
 
@@ -63,5 +63,4 @@ CI auto-regenerates the NotebookLM bundles on push to `main` via `.github/workfl
 ## Review Expectations
 
 - Read generated or agent-written changes before finishing.
-- Run `pnpm build` after frontend changes.
 - Mention any command that could not be run.
