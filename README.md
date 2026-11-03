@@ -57,7 +57,7 @@ For AI notebooks, upload [`notebooklm/starter-bundle.md`](notebooklm/starter-bun
 
 - [CHANGELOG.md](CHANGELOG.md) records shipped changes.
 - [GitHub issues](https://github.com/Protocol-Wealth/pw-learnai-core/issues) are the authoritative tracker for outstanding and planned work. Re-query them; no checked-in file mirrors them.
-- The estate design record, live and planned, is at [pwos.app/build](https://pwos.app/build).
+- The estate design record is internal (pwos.app/build, signed-in advisors only).
 - The agent-systems entryway shipped in [PR #55](https://github.com/Protocol-Wealth/pw-learnai-core/pull/55), closing [#54](https://github.com/Protocol-Wealth/pw-learnai-core/issues/54).
 
 ## Module index
@@ -185,11 +185,14 @@ Audit open PRs across `pw-learnai-core`, `pwcli-core`, `shard-core`, `nexus-core
 pnpm pr:audit
 ```
 
-Merge only PRs classified as clean, non-draft, check-passing, and not review-blocked:
+List PRs classified as clean, non-draft, check-passing, and not review-blocked (audit only; it merges nothing):
 
 ```bash
-pnpm pr:mergeable
+node scripts/audit-mergeable-prs.mjs
 ```
+
+Merging is never batched: each PR gets its review and merges through
+`pw-merge-when-clear` (estate doctrine §7.2, §8.3).
 
 ### With the interactive components
 
