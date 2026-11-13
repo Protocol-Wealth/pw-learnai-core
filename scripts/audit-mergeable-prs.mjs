@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Audit open PRs across the Protocol Wealth OSS learning surface.
-// Default is dry-run. Pass --merge to merge clean PRs.
+// Read-only: it reports each PR's state and never merges. A PR is merged on
+// its own, after its own review, through the maintainers' merge gate.
 
 import { execFileSync } from 'node:child_process'
 
@@ -12,8 +13,6 @@ const REPOS = [
   'Protocol-Wealth/pwos-core',
   'Protocol-Wealth/pwplan-core',
 ]
-
-const shouldMerge = process.argv.includes('--merge')
 
 function gh(args) {
   return execFileSync('gh', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] })
@@ -52,17 +51,16 @@ function listPrs(repo) {
     '--state',
     'open',
     '--json',
-    'number,title,url,isDraft,mergeStateStatus,reviewDecision,statusCheckRollup,headRefOid',
+    'number,title,url,isDraft,mergeStateStatus,reviewDecision,statusCheckRollup',
     '--limit',
     '100',
   ])
   return JSON.parse(json)
 }
 
-let mergeCount = 0
 let blockedCount = 0
 
-console.log(`PR hygiene audit (${shouldMerge ? 'merge mode' : 'dry run'})`)
+console.log('PR hygiene audit (read-only)')
 console.log('')
 
 for (const repo of REPOS) {
@@ -76,31 +74,9 @@ for (const repo of REPOS) {
     console.log(`    ${pr.url}`)
     console.log(`    mergeState=${pr.mergeStateStatus} draft=${pr.isDraft} review=${pr.reviewDecision || 'none'} checks=${checksPass(pr) ? 'pass' : 'not-pass'}`)
 
-    if (!mergeable) {
-      blockedCount += 1
-      continue
-    }
-
-    if (shouldMerge) {
-      gh([
-        'pr',
-        'merge',
-        String(pr.number),
-        '--repo',
-        repo,
-        '--squash',
-        '--delete-branch',
-        '--match-head-commit',
-        pr.headRefOid,
-      ])
-      mergeCount += 1
-      console.log('    merged')
-    }
+    if (!mergeable) blockedCount += 1
   }
 }
 
 console.log('')
-console.log(`Summary: merged=${mergeCount} blocked=${blockedCount}`)
-if (!shouldMerge) {
-  console.log('Run with --merge to merge PRs classified as MERGEABLE.')
-}
+console.log(`Summary: blocked=${blockedCount}`)
