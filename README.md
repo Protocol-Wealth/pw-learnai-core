@@ -57,7 +57,7 @@ For AI notebooks, upload [`notebooklm/starter-bundle.md`](notebooklm/starter-bun
 
 - [CHANGELOG.md](CHANGELOG.md) records shipped changes.
 - [GitHub issues](https://github.com/Protocol-Wealth/pw-learnai-core/issues) are the authoritative tracker for outstanding and planned work. Re-query them; no checked-in file mirrors them.
-- The estate design record, live and planned, is at [pwos.app/build](https://pwos.app/build).
+- The estate design record is internal (pwos.app/build, signed-in advisors only).
 - The agent-systems entryway shipped in [PR #55](https://github.com/Protocol-Wealth/pw-learnai-core/pull/55), closing [#54](https://github.com/Protocol-Wealth/pw-learnai-core/issues/54).
 
 ## Module index
@@ -179,17 +179,13 @@ For concrete Python and TypeScript Claude Agent SDK reference adapters, read the
 
 ### PR hygiene across the OSS surface
 
-Audit open PRs across `pw-learnai-core`, `pwcli-core`, `shard-core`, `nexus-core`, `pwos-core`, and `pwplan-core`:
+Audit open PRs across `pw-learnai-core`, `pwcli-core`, `shard-core`, `nexus-core`, `pwos-core`, and `pwplan-core` (read-only: it marks each PR MERGEABLE (approved, non-draft, clean, checks passing) or BLOCKED, and merges nothing):
 
 ```bash
 pnpm pr:audit
 ```
 
-Merge only PRs classified as clean, non-draft, check-passing, and not review-blocked:
-
-```bash
-pnpm pr:mergeable
-```
+Merging is never batched: each PR is reviewed and merged on its own by the maintainers.
 
 ### With the interactive components
 
