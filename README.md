@@ -179,20 +179,13 @@ For concrete Python and TypeScript Claude Agent SDK reference adapters, read the
 
 ### PR hygiene across the OSS surface
 
-Audit open PRs across `pw-learnai-core`, `pwcli-core`, `shard-core`, `nexus-core`, `pwos-core`, and `pwplan-core`:
+Audit open PRs across `pw-learnai-core`, `pwcli-core`, `shard-core`, `nexus-core`, `pwos-core`, and `pwplan-core` (read-only: it marks each PR MERGEABLE (approved, non-draft, clean, checks passing) or BLOCKED, and merges nothing):
 
 ```bash
 pnpm pr:audit
 ```
 
-List PRs classified as clean, non-draft, check-passing, and not review-blocked (audit only; it merges nothing):
-
-```bash
-node scripts/audit-mergeable-prs.mjs
-```
-
-Merging is never batched: each PR gets its review and merges through
-`pw-merge-when-clear` (estate doctrine §7.2, §8.3).
+Merging is never batched: each PR is reviewed and merged on its own by the maintainers.
 
 ### With the interactive components
 
